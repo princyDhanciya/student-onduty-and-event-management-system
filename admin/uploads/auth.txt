@@ -1,0 +1,14 @@
+Project name
+onduty react
+Project ID
+onduty-react
+Project number
+108654293097
+Default GCP resource location
+Not yet selected
+Web API key
+AIzaSyAtGWJ6RtQVetBhxtwpFNwXmKteBILnhKs
+Environment
+This setting customises your project for different stages of the app lifecycle
+Environment type
+Unspecifie

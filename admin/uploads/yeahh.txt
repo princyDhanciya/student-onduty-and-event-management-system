@@ -1,0 +1,21 @@
+equire("./userdetail");
+const user=mongoose.model("userinfo");
+app.post("/register",async(req,res)=>{
+  const {fname,lname,email,password,usertype}=>req.body;
+  try{
+    await User.create({
+      fname:name,
+      lname:name,
+      email,
+      password:encrypted password,
+      
+    });
+    res.send((status))
+  ||||
+ const oldUser = await User.findOne({ email });
+
+    if (oldUser) {
+      return res.json({ error: "User Exists" });
+
+
+http://localhost:3007

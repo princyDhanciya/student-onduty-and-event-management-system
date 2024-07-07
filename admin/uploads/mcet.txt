@@ -1,0 +1,45 @@
+hello mcet <i class="fa-solid fa-trophy" style="color: #f0f3f5;"></i>
+
+SELECT * FROM `requests` WHERE 1;
+ALTER TABLE requests
+ADD COLUMN rollno VARCHAR(255),
+ADD COLUMN from_date DATE,
+ADD COLUMN to_date DATE,
+ADD COLUMN venue VARCHAR(255),
+ADD COLUMN brochure BLOB
+
+if (isset($_POST['apply'])) {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $department = $_POST['department'];
+    $leavedate = $_POST['date'];
+    $roll_number = $_POST['roll_number']; // Newly added
+    $from_date = $_POST['from_date']; // Newly added
+    $to_date = $_POST['to_date']; // Newly added
+    $venue = $_POST['venue']; // Newly added
+    $reason_for_onduty = $_POST['reason_for_onduty'];
+    $status = $_POST['status'];
+    
+    // File Upload Handling
+    $file_name = $_FILES['brochure']['name']; // Newly added
+    $file_tmp = $_FILES['brochure']['tmp_name']; // Newly added
+    $file_type = $_FILES['brochure']['type']; // Newly added
+
+    // Ensure that the file is uploaded successfully
+    if (move_uploaded_file($file_tmp, "uploads/" . $file_name)) {
+        // If file upload is successful, proceed with inserting data into the database
+        $sql = "INSERT INTO requests (name, email, department, date, roll_number, from_date, to_date, venue, reason_for_onduty, brochure, status) VALUES ('$name', '$email', '$department', '$leavedate', '$roll_number', '$from_date', '$to_date', '$venue', '$reason_for_onduty', '$file_name', '$status')";
+        
+        // Execute the SQL query
+        if (mysqli_query($con, $sql)) {
+            // Success message
+            echo "<script>alert('Applied successfully.');</script>";
+        } else {
+            // Error message
+            echo "<script>alert('Error: " . mysqli_error($con) . "');</script>";
+        }
+    } else {
+        // Error message if file upload fails
+        echo "<script>alert('File upload failed.');</script>";
+    }
+}

@@ -1,0 +1,510 @@
+<?php 
+	include('inc/head.php'); 
+	
+	session_start();
+	if (isset($_SESSION['email'])) {
+		
+	}
+	else{
+		header('location:index.php');
+	}
+?>
+
+<body>
+	<nav class="navbar navbar-toggleable-sm navbar-inverse bg-inverse p-0">
+		<div class="container">
+			<button class="navbar-toggler toggler-right" data-target="#mynavbar" data-toggle="collapse">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<a href="#" class="navbar-brand mr-3">Onduty Management</a>
+			<div class="collapse navbar-collapse" id="mynavbar">
+				
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item dropdown mr-3">
+						
+						<li class="nav-item">
+							<a href="logout.php" class="nav-link"><i class="fa fa-power-off"></i> Logout</a>
+						</li>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<!--This Is Header-->
+	<header id="main-header" class="bg-danger py-2 text-white">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<h1><i class="fa fa-user-secret"></i> Admin Panel</h1>
+				</div>
+			</div>
+		</div>
+	</header>
+	<!--This is section-->
+	<section id="sections" class="py-4 mb-4 bg-faded">
+		<div class="container">
+			<div class="row">
+				<div class="col-md"></div>
+				<div class="col-md-2">
+					<a href="#" class="btn btn-warning btn-block" style="border-radius:0%;" data-toggle="modal" data-target="#addPostModal"><i class="fa fa-spinner"></i> Pendings</a>
+				</div>
+				<div class="col-md-2">
+                    <a href="approved.php" class="btn btn-success btn-block" style="border-radius:0%;" ><i class="fa fa-check"></i> Approved requests</a>
+                </div>
+
+				<div class="col-md-2">
+					<a href="#" class="btn btn-primary btn-block" style="border-radius:0%;" data-toggle="modal" data-target="#addUsertModal"><i class="fa fa-th"></i> Total requests</a>
+				</div>
+				<div class="col-md-2">
+					<a href="#" class="btn btn-danger btn-block" style="border-radius:0%;" data-toggle="modal" data-target="#addEmpModal"><i class="fa fa-users"></i> Add users</a>
+				</div>
+				<div class="col-md-2">
+					<a href="#" class="btn btn-info btn-block" style="border-radius:0%;" data-toggle="modal" data-target="#viewEmpModal"><i class="fa fa-eye"></i> View users</a>
+				</div>
+				<div class="d-flex justify-content-end">
+                    <div style="position: relative; top: -37px;">
+                    <a href="#" class="btn btn-info btn-block" style="border-radius:0%;" data-toggle="modal" data-target="#viewCertificatesModal"><i class="fa fa-trophy" ></i> View Certificates</a>
+                </div>
+				</div>
+				<div class="col-md"></div>
+			</div>
+		</div>
+	
+	</section>
+	
+	
+	<!----Section2 for showing Post Model ---->
+	<!-- Admin Dashboard -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Requests</h2>
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Date</th>
+                    <th>Reason for On Duty</th>
+                    <th>Roll No</th>
+                    <th>From Date</th>
+                    <th>To Date</th>
+                    <th>Venue</th>
+                    <th>Upload Brochure</th>
+                    <th>Status</th>
+                </thead>
+                <tbody>
+				<?php
+// Include your database connection file
+
+// Fetch requests from the database
+$sql = "SELECT * FROM requests";
+$result = mysqli_query($con, $sql);
+$count = 1;
+while ($row = mysqli_fetch_assoc($result)) {
+    ?>
+    <tr>
+        <td><?php echo $count; ?></td>
+        <td><?php echo $row['name']; ?></td>
+        <td><?php echo $row['department']; ?></td>
+        <td><?php echo $row['date']; ?></td>
+        <td><?php echo $row['reason_for_onduty']; ?></td>
+        <td><?php echo $row['rollno']; ?></td>
+        <td><?php echo $row['from_date']; ?></td>
+        <td><?php echo $row['to_date']; ?></td>
+        <td><?php echo $row['venue']; ?></td>
+        <td>
+            <?php 
+            // Display the brochure link if available
+            if (!empty($row['brochure'])) {
+                echo "<a href='uploads /" . $row['brochure'] . "' target='_blank'>View Brochure</a>";
+            } else {
+                echo "No brochure uploaded";
+            }
+            ?>
+        </td>
+        <td>
+            <?php
+            if ($row['status'] == 0) {
+                echo "<span class='badge badge-warning'>Pending</span>";
+            } else {
+                echo "<span class='badge badge-success'>Approved</span>";
+            }
+            ?>
+        </td>
+    </tr>
+    <?php
+    $count++;
+}
+?>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+	</section>
+	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+	<!----Section3 footer ---->
+	<section id="main-footer" class="text-center text-black bg-inverse mt-4 p-4">
+		<div class="container">
+			<div class="row">
+				<div class="col">
+					<p</p>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<!-- Creating Modal -->
+    <!-- Header Post -->
+	<div class="modal fade" id="addPostModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-white">
+                <div class="modal-title">
+                    <h5>Pending</h5>
+                </div>
+                <button class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive"> <!-- Wrap the table in a div with class table-responsive -->
+                    <table class="table table-bordered table-hover table-striped">
+                        <thead>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Date</th>
+                            <th>Reason for onduty</th>
+                            <th>Roll No</th>
+                            <th>From Date</th>
+                            <th>To Date</th>
+                            <th>Venue</th>
+                            <th>Upload Brochure</th>
+                            <th>Status</th>
+                            <th>Action</th>
+						<tbody>
+							<?php 
+								$sql = "SELECT * FROM requests WHERE status = 0";
+								$que = mysqli_query($con,$sql);
+								$cnt = 1;
+								while ($result = mysqli_fetch_assoc($que)) {
+							?>
+							<tr>
+								<td><?php echo $cnt;?></td>
+								<td><?php echo $result['name']; ?></td>
+								<td><?php echo $result['department']; ?></td>
+								<td><?php echo $result['date']; ?></td>
+								<td><?php echo $result['reason_for_onduty']; ?></td>
+								<td><?php echo $result['rollno']; ?></td>
+                                <td><?php echo $result['from_date']; ?></td>
+                                <td><?php echo $result['to_date']; ?></td>
+                                <td><?php echo $result['venue']; ?></td>
+                                <td><?php echo $result['brochure']; ?></td>
+								<td>
+									<?php 
+										if ($result['status'] == 0) {
+											echo "Pending";
+										}
+										else{
+											echo "Approved";
+										}
+									?>
+								</td>
+								<td>
+									<form action="accept.php?id=<?php echo $result['id']; ?>" method="POST">
+										<input type="hidden" name="appid" value="<?php echo $result['id']; ?>">
+										<input type="submit" class="btn btn-sm btn-success" name="approve" value="Approve">
+									</form>
+								</td>
+							</tr>
+							<?php 
+								$cnt++;
+								}
+							?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--Modal Category-->
+	<div class="modal fade" id="addCateModal">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header bg-success text-white">
+					<div class="modal-title">
+						<h5>Approved requests</h5>
+					</div>
+					<button class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+				
+					<table class="table table-bordered table-hover table-striped">
+						<thead>
+							<th>#</th>
+							<th>Name</th>
+							<th>Department</th>
+							<th>Date</th>
+							<th>Reason for onduty</th>
+							<th>Roll No</th>
+                            <th>From Date</th>
+                            <th>To Date</th>
+                            <th>Venue</th>
+                            <th>Upload Brochure</th>
+                            <th>Status</th>
+						</thead>
+						<tbody>
+							<?php 
+								$sql = "SELECT * FROM requests WHERE status = 1";
+								$que = mysqli_query($con,$sql);
+								$cnt = 1;
+								while ($result = mysqli_fetch_assoc($que)) {
+							?>
+							<tr>
+								<td><?php echo $cnt;?></td>
+								<td><?php echo $result['name']; ?></td>
+								<td><?php echo $result['department']; ?></td>
+								<td><?php echo $result['date']; ?></td>
+								<td><?php echo $result['reason_for_onduty']; ?></td>
+								<td><?php echo $result['rollno']; ?></td>
+                                <td><?php echo $result['from_date']; ?></td>
+                                <td><?php echo $result['to_date']; ?></td>
+                                <td><?php echo $result['venue']; ?></td>
+                                <td><?php echo $result['brochure']; ?></td>
+								<td>
+									<?php 
+										if ($result['status'] == 0) {
+											echo "<span class='badge badge-warning'>Pending</span>";
+										}
+										else{
+											echo "<span class='badge badge-success'>Approved</span>";
+										}
+									?>
+								</td>
+							</tr>
+							<?php 
+								$cnt++;
+								}
+							?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- User Modal -->
+	<div class="modal fade" id="addUsertModal">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header bg-primary text-white">
+					<div class="modal-title">
+						<h5>Total requests</h5>
+					</div>
+					<button class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				
+					<table class="table table-bordered table-hover table-striped">
+						<thead>
+							<th>#</th>
+							<th>Name</th>
+							<th>Department</th>
+							<th>Date</th>
+							<th>Reason for onduty</th>
+							<th>Roll No</th>
+                            <th>From Date</th>
+                            <th>To Date</th>
+                            <th>Venue</th>
+                            <th>Upload Brochure</th>
+                            <th>Status</th>
+						</thead>
+						<tbody>
+							<?php 
+								$sql = "SELECT * FROM requests ORDER BY id DESC";
+								$que = mysqli_query($con,$sql);
+								$cnt = 1;
+								while ($result = mysqli_fetch_assoc($que)) {
+							?>
+							<tr>
+								<td><?php echo $cnt;?></td>
+								<td><?php echo $result['name']; ?></td>
+								<td><?php echo $result['department']; ?></td>
+								<td><?php echo $result['date']; ?></td>
+								<td><?php echo $result['reason_for_onduty']; ?></td>
+								<td><?php echo $result['rollno']; ?></td>
+                                <td><?php echo $result['from_date']; ?></td>
+                                <td><?php echo $result['to_date']; ?></td>
+                                <td><?php echo $result['venue']; ?></td>
+                                <td><?php echo $result['brochure']; ?></td>
+								<td>
+									<?php 
+										if ($result['status'] == 0) {
+											echo "<span class='badge badge-warning'>Pending</span>";
+										}
+										else{
+											echo "<span class='badge badge-success'>Approved</span>";
+										}
+									?>
+								</td>
+							</tr>
+							<?php 
+								$cnt++;
+								}
+							?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Add Users Modal -->
+	<div class="modal fade" id="addEmpModal">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header bg-danger text-white">
+					<div class="modal-title">
+						<h5>Add Users</h5>
+					</div>
+					<button class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<form action="" method="post">
+						<div class="form-group">
+							<label class="form-control-label">Name</label>
+							<input type="text" name="name" class="form-control" />
+							<label class="form-control-label">Department</label>
+							<select name="department" class="form-control">
+							<option value="CSE">CSE</option>
+								<option value="AIML">AIML</option>
+								<option value="AIDS">AIDS</option>
+								<option value="EEE">EEE</option>
+								<option value="ECE">ECE</option>
+								<option value="AUTOMOBILE">AUTOMOBILE</option>
+								<option value="MECH">MECH</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label class="form-control-label">Email</label>
+							<input type="email" name="email" class="form-control" />
+						</div>
+						<div class="form-group">
+							<label class="form-control-label">Password</label>
+							<input type="password" name="password" class="form-control" />
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-danger" style="border-radius:0%;" data-dismiss="modal">Close</button>
+							<input type="hidden" name="status" value="0">
+							<input type="submit" class="btn btn-success" style="border-radius:0%;" name="adduser"  value="Add">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- View Employee Modal -->
+	<div class="modal fade" id="viewEmpModal">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header bg-info text-white">
+					<div class="modal-title">
+						<h5>users List</h5>
+					</div>
+					<button class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<table class="table table-bordered table-hover table-striped">
+						<thead>
+							<th>#</th>
+							<th>Name</th>
+							<th>Department</th>
+							<th>Email</th>
+							<th>Action</th>
+						</thead>
+						<tbody>
+							<?php 
+								$sql = "SELECT * FROM users";
+								$que = mysqli_query($con,$sql);
+								$cnt = 1;
+								while ($result = mysqli_fetch_assoc($que)) {
+							?>
+							<tr>
+								<td><?php echo $cnt;?></td>
+								<td><?php echo $result['name']; ?></td>
+								<td><?php echo $result['department']; ?></td>
+								<td><?php echo $result['email']; ?></td>
+								<td><a href="deletemp.php?id=<?php echo $result["id"]; ?>"><button type="button" class="btn btn-danger" style="border-radius:0%;">Delete</button></a></td>
+							</tr>
+							<?php 
+								$cnt++;
+								}
+							?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- This is section for displaying uploaded certificates -->
+
+<!-- Button to Trigger View Certificates Modal -->
+
+
+<!-- Modal for Viewing Certificates -->
+<div class="modal fade" id="viewCertificatesModal" tabindex="-1" role="dialog" aria-labelledby="viewCertificatesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="viewCertificatesModalLabel">Uploaded Certificates</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><a href="view_certificates.php" target="_blank">VIEW CERTIFICATES</a></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+	<script src="js/jquery.min.js"></script>
+	<script src="js/tether.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="https://cdn.ckeditor.com/4.9.1/standard/ckeditor.js"></script>
+	<script>
+		CKEDITOR.replace('editor1');
+	</script>
+	
+</body>
+</html>
+
+
+<?php 
+	if (isset($_POST['adduser'])){
+		$name = $_POST['name'];
+		$department = $_POST['department'];
+		$email = $_POST['email'];
+		$password = md5($_POST['password']);
+
+		$sql = "INSERT INTO users(name, department, email, password) VALUES ('$name', '$department', '$email', '$password')";
+
+		$run = mysqli_query($con,$sql);
+
+		if($run == true){
+			echo "<script> 
+					alert('User Added');
+					window.open('dashboard.php','_self');
+				  </script>";
+		}else{
+			echo "<script> 
+			alert('Failed');
+			</script>";
+		}
+	}
+?>

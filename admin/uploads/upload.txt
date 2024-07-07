@@ -1,0 +1,15 @@
+ <!-- File input field added -->
+                        <div class="form-group">
+                            <label>Upload File</label>
+                            <input type="file" name="fileToUpload" class="form-control-file" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-danger" style="border-radius:0%;" data-dismiss="modal">Close</button>
+                            <input type="hidden" name="status" value="0">
+                            <input type="submit" class="btn btn-success" style="border-radius:0%;" name="apply"  value="Apply">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
